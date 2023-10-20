@@ -26,7 +26,7 @@ class LitDigitReader(pl.LightningModule):
         return self.model(x)
 
     def configure_optimizers(self):
-        return optim.SGD(self.model.parameters(), lr=1e-1)
+        return optim.Adam(self.model.parameters(), lr=1e-3)
 
     def training_step(self, batch, batch_idx):
         x, y = batch
