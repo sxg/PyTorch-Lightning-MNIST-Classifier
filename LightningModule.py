@@ -4,6 +4,7 @@ import torch.utils.data as data
 from torchvision.datasets import MNIST
 import torchvision.transforms as transforms
 import lightning.pytorch as pl
+from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 
 
 # The LightningModule
@@ -71,7 +72,11 @@ valid_loader = data.DataLoader(valid_set)
 test_loader = data.DataLoader(test_set)
 
 # Train the model
-trainer = pl.Trainer(limit_train_batches=100, max_epochs=1)
+trainer = pl.Trainer(
+    limit_train_batches=100,
+    max_epochs=5,
+    callbacks=[EarlyStopping(monitor="val_loss", mode="min")],
+)
 trainer.fit(autoencoder, train_loader, valid_loader)
 
 # Test the model
