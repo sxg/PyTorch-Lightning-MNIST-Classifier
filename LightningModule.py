@@ -29,9 +29,6 @@ class LitDigitReader(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         x, y = batch
-        # x = x.view(
-        #     x.size(0), -1
-        # )  # Get rid of unneeded dimensions in the image
         output = self(x)
         loss = self.loss_fn(output, y)  # Calculate the difference
         self.log("train_loss", loss)  # Log to TensorBoard
@@ -39,9 +36,6 @@ class LitDigitReader(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
-        # x = x.view(
-        #     x.size(0), -1
-        # )  # Get rid of unneeded dimensions in the image
         output = self(x)
         loss = self.loss_fn(output, y)
         self.log("val_loss", loss)  # Log to TensorBoard
@@ -49,9 +43,6 @@ class LitDigitReader(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         x, y = batch
-        # x = x.view(
-        #     x.size(0), -1
-        # )  # Get rid of unneeded dimensions in the image
         output = self(x)
         loss = self.loss_fn(output, y)  # Calculate the difference
         self.log("test_loss", loss)  # Log to TensorBoard
