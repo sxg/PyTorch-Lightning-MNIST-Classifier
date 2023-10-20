@@ -6,6 +6,7 @@ import torchvision.transforms as transforms
 import torchvision.models as models
 import lightning.pytorch as pl
 from lightning.pytorch.callbacks.early_stopping import EarlyStopping
+from torchmetrics import functional as F
 
 
 # The LightningModule
@@ -39,14 +40,18 @@ class LitDigitReader(pl.LightningModule):
         output = self(x)
         loss = self.loss_fn(output, y)
         self.log("val_loss", loss)  # Log to TensorBoard
-        return loss
+        acc = F.accuracy(output, y, task="multiclass", num_classes=10)
+        self.log("val_acc", acc)  # Log to Tensorboard
+        return {"loss": loss, "acc": acc}
 
     def test_step(self, batch, batch_idx):
         x, y = batch
         output = self(x)
         loss = self.loss_fn(output, y)  # Calculate the difference
         self.log("test_loss", loss)  # Log to TensorBoard
-        return loss
+        acc = F.accuracy(output, y, task="multiclass", num_classes=10)
+        self.log("test_acc", acc)  # Log to Tensorboard
+        return {"loss": loss, "acc": acc}
 
 
 # Transforms
