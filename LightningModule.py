@@ -7,6 +7,7 @@ import torchvision.models as models
 import lightning.pytorch as pl
 from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from torchmetrics import functional as F
+from torchvision.utils import make_grid
 
 
 # The LightningModule
@@ -21,6 +22,8 @@ class LitDigitReader(pl.LightningModule):
         for param in self.model.fc.parameters():
             param.requires_grad = True
         self.loss_fn = nn.CrossEntropyLoss()
+        self.valid_logged_images = False
+        self.test_logged_images = False
 
     def forward(self, x):
         return self.model(x)
@@ -42,6 +45,22 @@ class LitDigitReader(pl.LightningModule):
         self.log("val_loss", loss)  # Log to TensorBoard
         acc = F.accuracy(output, y, task="multiclass", num_classes=10)
         self.log("val_acc", acc)  # Log to Tensorboard
+
+        # Log images to Tensorboard
+        if not self.valid_logged_images:
+            preds = torch.argmax(output, dim=1)
+            img_grid = make_grid(x)
+            self.logger.experiment.add_image(
+                "val/inputs", img_grid, self.current_epoch
+            )
+            self.logger.experiment.add_text(
+                "val/targets", str(y), self.current_epoch
+            )
+            self.logger.experiment.add_text(
+                "val/preds", str(preds), self.current_epoch
+            )
+            self.valid_logged_images = True
+
         return {"loss": loss, "acc": acc}
 
     def test_step(self, batch, batch_idx):
@@ -51,7 +70,29 @@ class LitDigitReader(pl.LightningModule):
         self.log("test_loss", loss)  # Log to TensorBoard
         acc = F.accuracy(output, y, task="multiclass", num_classes=10)
         self.log("test_acc", acc)  # Log to Tensorboard
+
+        # Log images to Tensorboard
+        if not self.test_logged_images:
+            preds = torch.argmax(output, dim=1)
+            img_grid = make_grid(x)
+            self.logger.experiment.add_image(
+                "test/inputs", img_grid, self.current_epoch
+            )
+            self.logger.experiment.add_text(
+                "test/targets", str(y), self.current_epoch
+            )
+            self.logger.experiment.add_text(
+                "test/preds", str(preds), self.current_epoch
+            )
+            self.test_logged_images = True
+
         return {"loss": loss, "acc": acc}
+
+    def on_validation_epoch_end(self):
+        self.valid_logged_images = False
+
+    def on_test_epoch_end(self):
+        self.test_logged_images = False
 
 
 # Transforms
