@@ -12,14 +12,26 @@ from DigitDataModule import DigitDataModule
 class DigitModule(pl.LightningModule):
     def __init__(self):
         super().__init__()
-        self.model = models.resnet50(weights="DEFAULT")
-        for param in self.model.parameters():
-            param.requires_grad = False
-        num_filters = self.model.fc.in_features
-        self.model.fc = nn.Linear(num_filters, 10)
-        for param in self.model.fc.parameters():
-            param.requires_grad = True
+        # self.model = models.resnet50(weights="DEFAULT")
+        # for param in self.model.parameters():
+        #     param.requires_grad = False
+        # num_filters = self.model.fc.in_features
+        # self.model.fc = nn.Linear(num_filters, 10)
+        # for param in self.model.fc.parameters():
+        #     param.requires_grad = True
+
+        self.model = nn.Sequential(
+            nn.Linear(784, 128),
+            nn.ReLU(),
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Linear(64, 10),
+            # nn.LogSoftmax(dim=1),
+        )
+
+        # self.loss_fn = nn.NLLLoss()
         self.loss_fn = nn.CrossEntropyLoss()
+
         self.train_logged_images = False
         self.valid_logged_images = False
         self.test_logged_images = False
@@ -32,7 +44,8 @@ class DigitModule(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         x, y = batch
-        output = self(x)
+        x_reshaped = x.view(-1, 784)
+        output = self(x_reshaped)
         loss = self.loss_fn(output, y)  # Calculate the difference
         self.log("train/loss", loss)  # Log to TensorBoard
 
@@ -55,7 +68,8 @@ class DigitModule(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
-        output = self(x)
+        x_reshaped = x.view(-1, 784)
+        output = self(x_reshaped)
         loss = self.loss_fn(output, y)
         self.log("val/loss", loss)  # Log to TensorBoard
         acc = F.accuracy(output, y, task="multiclass", num_classes=10)
@@ -80,7 +94,8 @@ class DigitModule(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         x, y = batch
-        output = self(x)
+        x_reshaped = x.view(-1, 784)
+        output = self(x_reshaped)
         loss = self.loss_fn(output, y)  # Calculate the difference
         self.log("test/loss", loss)  # Log to TensorBoard
         acc = F.accuracy(output, y, task="multiclass", num_classes=10)

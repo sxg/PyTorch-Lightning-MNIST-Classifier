@@ -14,11 +14,11 @@ class DigitDataModule(pl.LightningDataModule):
             [
                 transforms.ToTensor(),
                 transforms.Normalize((0.5,), (0.5,)),
-                transforms.Lambda(DigitDataModule._make_3_channels),
+                # transforms.Lambda(DigitDataModule._make_3_channels),
                 # transforms.RandomRotation(15),
-                transforms.RandomAffine(10, (0.05, 0.05), (0.8, 1.2), 5),
-                transforms.RandomCrop(26),
-                transforms.RandomErasing(0.5, (0.02, 0.1), (0.3, 3.3)),
+                # transforms.RandomAffine(10, (0.05, 0.05), (0.8, 1.2), 5),
+                # transforms.RandomCrop(26),
+                # transforms.RandomErasing(0.5, (0.02, 0.1), (0.3, 3.3)),
                 # transforms.Lambda(DigitDataModule._add_noise),
             ]
         )
@@ -26,7 +26,7 @@ class DigitDataModule(pl.LightningDataModule):
             [
                 transforms.ToTensor(),
                 transforms.Normalize((0.5,), (0.5,)),
-                transforms.Lambda(DigitDataModule._make_3_channels),
+                # transforms.Lambda(DigitDataModule._make_3_channels),
             ]
         )
 
