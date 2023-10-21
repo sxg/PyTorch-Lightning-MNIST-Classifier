@@ -20,6 +20,7 @@ class DigitModule(pl.LightningModule):
         for param in self.model.fc.parameters():
             param.requires_grad = True
         self.loss_fn = nn.CrossEntropyLoss()
+        self.train_logged_images = False
         self.valid_logged_images = False
         self.test_logged_images = False
 
@@ -33,16 +34,32 @@ class DigitModule(pl.LightningModule):
         x, y = batch
         output = self(x)
         loss = self.loss_fn(output, y)  # Calculate the difference
-        self.log("train_loss", loss)  # Log to TensorBoard
+        self.log("train/loss", loss)  # Log to TensorBoard
+
+        # Log images to Tensorboard
+        if not self.train_logged_images:
+            preds = torch.argmax(output, dim=1)
+            img_grid = make_grid(x)
+            self.logger.experiment.add_image(
+                "train/inputs", img_grid, self.current_epoch
+            )
+            self.logger.experiment.add_text(
+                "train/targets", str(y), self.current_epoch
+            )
+            self.logger.experiment.add_text(
+                "train/preds", str(preds), self.current_epoch
+            )
+            self.train_logged_images = True
+
         return loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
         output = self(x)
         loss = self.loss_fn(output, y)
-        self.log("val_loss", loss)  # Log to TensorBoard
+        self.log("val/loss", loss)  # Log to TensorBoard
         acc = F.accuracy(output, y, task="multiclass", num_classes=10)
-        self.log("val_acc", acc)  # Log to Tensorboard
+        self.log("val/acc", acc)  # Log to Tensorboard
 
         # Log images to Tensorboard
         if not self.valid_logged_images:
@@ -65,9 +82,9 @@ class DigitModule(pl.LightningModule):
         x, y = batch
         output = self(x)
         loss = self.loss_fn(output, y)  # Calculate the difference
-        self.log("test_loss", loss)  # Log to TensorBoard
+        self.log("test/loss", loss)  # Log to TensorBoard
         acc = F.accuracy(output, y, task="multiclass", num_classes=10)
-        self.log("test_acc", acc)  # Log to Tensorboard
+        self.log("test/acc", acc)  # Log to Tensorboard
 
         # Log images to Tensorboard
         if not self.test_logged_images:
@@ -85,6 +102,9 @@ class DigitModule(pl.LightningModule):
             self.test_logged_images = True
 
         return {"loss": loss, "acc": acc}
+
+    def on_training_epoch_end(self):
+        self.train_logged_images = False
 
     def on_validation_epoch_end(self):
         self.valid_logged_images = False
