@@ -50,15 +50,15 @@ class DigitDataModule(pl.LightningDataModule):
 
     def train_dataloader(self):
         return data.DataLoader(
-            self.train_set, batch_size=self.batch_size, num_workers=0
+            self.train_set, batch_size=self.batch_size, num_workers=10
         )
 
     def val_dataloader(self):
         return data.DataLoader(
-            self.val_set, batch_size=self.batch_size, num_workers=0
+            self.val_set, batch_size=self.batch_size, num_workers=10
         )
 
     def test_dataloader(self):
         return data.DataLoader(
-            self.test_set, batch_size=self.batch_size, num_workers=0
+            self.test_set, batch_size=self.batch_size, num_workers=10
         )
