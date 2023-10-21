@@ -1,17 +1,15 @@
 from torch import optim, nn
 import torch
-import torch.utils.data as data
-from torchvision.datasets import MNIST
-import torchvision.transforms as transforms
 import torchvision.models as models
 import lightning.pytorch as pl
 from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from torchmetrics import functional as F
 from torchvision.utils import make_grid
+from DigitDataModule import DigitDataModule
 
 
 # The LightningModule
-class LitDigitReader(pl.LightningModule):
+class DigitModule(pl.LightningModule):
     def __init__(self):
         super().__init__()
         self.model = models.resnet50(weights="DEFAULT")
@@ -102,30 +100,10 @@ def make_3_channels(x):
 
 def main():
     # The actual model
-    model = LitDigitReader()
+    model = DigitModule()
 
-    transform = transforms.Compose(
-        [transforms.ToTensor(), transforms.Lambda(make_3_channels)]
-    )
-
-    # The training and validation data
-    train_set = MNIST(
-        root="MNIST", download=True, train=True, transform=transform
-    )
-    train_set_size = int(
-        len(train_set) * 0.8
-    )  # Setup train/valid dataset sizes
-    valid_set_size = len(train_set) - train_set_size
-    seed = torch.Generator().manual_seed(42)  # Setup RNG for train/valid split
-    train_set, valid_set = data.random_split(  # Split train/valid datasets
-        train_set, [train_set_size, valid_set_size], generator=seed
-    )
-    test_set = MNIST(
-        root="MNIST", download=True, train=False, transform=transform
-    )
-    train_loader = data.DataLoader(train_set, batch_size=64, num_workers=10)
-    valid_loader = data.DataLoader(valid_set, batch_size=64, num_workers=10)
-    test_loader = data.DataLoader(test_set, batch_size=64, num_workers=10)
+    # The data
+    dm = DigitDataModule(batch_size=64)
 
     # Train the model
     trainer = pl.Trainer(
@@ -133,10 +111,10 @@ def main():
         max_epochs=5,
         callbacks=[EarlyStopping(monitor="val_loss", mode="min")],
     )
-    trainer.fit(model, train_loader, valid_loader)
+    trainer.fit(model, datamodule=dm)
 
     # Test the model
-    trainer.test(model, dataloaders=test_loader)
+    trainer.test(model, datamodule=dm)
 
 
 if __name__ == "__main__":
