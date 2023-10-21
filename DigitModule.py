@@ -1,8 +1,6 @@
 from torch import optim, nn
 import torch
-import torchvision.models as models
 import lightning.pytorch as pl
-from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from torchmetrics import functional as F
 from torchvision.utils import make_grid
 from DigitDataModule import DigitDataModule
@@ -12,13 +10,6 @@ from DigitDataModule import DigitDataModule
 class DigitModule(pl.LightningModule):
     def __init__(self):
         super().__init__()
-        # self.model = models.resnet50(weights="DEFAULT")
-        # for param in self.model.parameters():
-        #     param.requires_grad = False
-        # num_filters = self.model.fc.in_features
-        # self.model.fc = nn.Linear(num_filters, 10)
-        # for param in self.model.fc.parameters():
-        #     param.requires_grad = True
 
         self.model = nn.Sequential(
             nn.Linear(784, 128),
@@ -26,10 +17,8 @@ class DigitModule(pl.LightningModule):
             nn.Linear(128, 64),
             nn.ReLU(),
             nn.Linear(64, 10),
-            # nn.LogSoftmax(dim=1),
         )
 
-        # self.loss_fn = nn.NLLLoss()
         self.loss_fn = nn.CrossEntropyLoss()
 
         self.train_logged_images = False
@@ -137,9 +126,7 @@ def main():
 
     # Train the model
     trainer = pl.Trainer(
-        # limit_train_batches=100,
         max_epochs=5,
-        # callbacks=[EarlyStopping(monitor="val_loss", mode="min")],
     )
     trainer.fit(model, datamodule=dm)
 

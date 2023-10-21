@@ -10,32 +10,12 @@ class DigitDataModule(pl.LightningDataModule):
         super().__init__()
         self.batch_size = batch_size
         # Setup the transforms
-        self.train_transform = transforms.Compose(
-            [
-                transforms.ToTensor(),
-                transforms.Normalize((0.5,), (0.5,)),
-                # transforms.Lambda(DigitDataModule._make_3_channels),
-                # transforms.RandomRotation(15),
-                # transforms.RandomAffine(10, (0.05, 0.05), (0.8, 1.2), 5),
-                # transforms.RandomCrop(26),
-                # transforms.RandomErasing(0.5, (0.02, 0.1), (0.3, 3.3)),
-                # transforms.Lambda(DigitDataModule._add_noise),
-            ]
-        )
         self.transform = transforms.Compose(
             [
                 transforms.ToTensor(),
                 transforms.Normalize((0.5,), (0.5,)),
-                # transforms.Lambda(DigitDataModule._make_3_channels),
             ]
         )
-
-    # Helper function to replicate single channel images to 3 channel
-    def _make_3_channels(x):
-        return x.repeat(3, 1, 1)
-
-    def _add_noise(x):
-        return x + 0.1 * torch.randn_like(x)
 
     def prepare_data(self):
         MNIST("MNIST", train=True, download=True)
@@ -46,7 +26,7 @@ class DigitDataModule(pl.LightningDataModule):
             full_set = MNIST(
                 root="MNIST",
                 train=True,
-                transform=self.train_transform,
+                transform=self.transform,
             )
             train_set_size = int(len(full_set) * 0.8)
             val_set_size = len(full_set) - train_set_size
