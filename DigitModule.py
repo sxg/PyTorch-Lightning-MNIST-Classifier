@@ -122,9 +122,9 @@ def main():
 
     # Train the model
     trainer = pl.Trainer(
-        limit_train_batches=100,
+        # limit_train_batches=100,
         max_epochs=5,
-        callbacks=[EarlyStopping(monitor="val_loss", mode="min")],
+        # callbacks=[EarlyStopping(monitor="val_loss", mode="min")],
     )
     trainer.fit(model, datamodule=dm)
 
