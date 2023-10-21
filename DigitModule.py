@@ -93,11 +93,6 @@ class DigitModule(pl.LightningModule):
         self.test_logged_images = False
 
 
-# Transforms
-def make_3_channels(x):
-    return x.repeat(3, 1, 1)
-
-
 def main():
     # The actual model
     model = DigitModule()
