@@ -26,15 +26,15 @@ class DigitModule(pl.LightningModule):
         self.test_logged_images = False
 
     def forward(self, x):
-        return self.model(x)
+        x_reshaped = x.view(-1, 784)
+        return self.model(x_reshaped)
 
     def configure_optimizers(self):
         return optim.Adam(self.model.parameters(), lr=1e-3)
 
     def training_step(self, batch, batch_idx):
         x, y = batch
-        x_reshaped = x.view(-1, 784)
-        output = self(x_reshaped)
+        output = self(x)
         loss = self.loss_fn(output, y)  # Calculate the difference
         self.log("train/loss", loss)  # Log to TensorBoard
 
@@ -57,8 +57,7 @@ class DigitModule(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
-        x_reshaped = x.view(-1, 784)
-        output = self(x_reshaped)
+        output = self(x)
         loss = self.loss_fn(output, y)
         self.log("val/loss", loss)  # Log to TensorBoard
         acc = F.accuracy(output, y, task="multiclass", num_classes=10)
@@ -83,8 +82,7 @@ class DigitModule(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         x, y = batch
-        x_reshaped = x.view(-1, 784)
-        output = self(x_reshaped)
+        output = self(x)
         loss = self.loss_fn(output, y)  # Calculate the difference
         self.log("test/loss", loss)  # Log to TensorBoard
         acc = F.accuracy(output, y, task="multiclass", num_classes=10)
