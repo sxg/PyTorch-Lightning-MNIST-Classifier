@@ -17,9 +17,9 @@ pip install tensorboard  # TensorBoard
 
 The MNIST handwritten digit dataset consists of 60,000 training images and 10,000 test images. Each handwritten digit is a grayscale 28 px × 28 px image (i.e., 784 total pixels) and is directly available from `torchvision.datasets`.
 
-![Sample images of handwritten digits from the MNIST database. [Image courtesy of Wikipedia](https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamplesModified.png).](Images/MnistExamplesModified.png)
+![Sample images of handwritten digits from the MNIST database. [Image courtesy of Wikipedia](https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamplesModified.jpeg).](Images/MnistExamplesModified.jpeg)
 
-Sample images of handwritten digits from the MNIST database. [Image courtesy of Wikipedia](https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamplesModified.png).
+Sample images of handwritten digits from the MNIST database. [Image courtesy of Wikipedia](https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamplesModified.jpeg).
 
 ## `LightningDataModule`
 
@@ -248,7 +248,7 @@ Let’s turn over to TensorBoard, which you can start by running this in the fol
 tensorboard --logdir=lightning_logs/
 ```
 
-![TensorBoard showing the data we’ve logged. I’ve pinned the validation loss and accuracy, the test accuracy, and the training loss to the top.](Images/Untitled.png)
+![TensorBoard showing the data we’ve logged. I’ve pinned the validation loss and accuracy, the test accuracy, and the training loss to the top.](Images/Untitled.jpeg)
 
 TensorBoard showing the data we’ve logged. I’ve pinned the validation loss and accuracy, the test accuracy, and the training loss to the top.
 
@@ -260,13 +260,13 @@ Now—most importantly—we need to check our test accuracy in the bottom left c
 
 Let’s take a look at some of the images we’ve logged:
 
-![64 sample handwritten digit images from the MNIST data that we logged during the test step.](Images/Untitled%201.png)
+![64 sample handwritten digit images from the MNIST data that we logged during the test step.](Images/Untitled%201.jpeg)
 
 64 sample handwritten digit images from the MNIST data that we logged during the test step.
 
 By navigating over to the “IMAGES” tab along the top navigation bar in TensorBoard, we can see the sample handwritten digit images we logged using the `torchvision.utils.make_grid()` function. Nothing too exciting in this case, but this can be a great way to find underlying issues with your data if you’re having problems. Let’s take a look at the predicted and actual labels for these images:
 
-![The 64 labels our model predicted for the images are in the top box, and the 64 actual ground truth labels from the MNIST data are in the bottom box.](Images/Untitled%202.png)
+![The 64 labels our model predicted for the images are in the top box, and the 64 actual ground truth labels from the MNIST data are in the bottom box.](Images/Untitled%202.jpeg)
 
 The 64 labels our model predicted for the images are in the top box, and the 64 actual ground truth labels from the MNIST data are in the bottom box.
 
