@@ -1,6 +1,6 @@
 # Creating an MNIST Classifier with PyTorch Lightning
 
-Basic image classification using the MNIST handwritten digit dataset is a solved problem in 2023, but this makes it perfect for learning some new techniques like PyTorch Lightning, which promises to standardize, simplify, and accelerate the way we create models with PyTorch. The MNIST dataset consists of handwritten digits from 0 through 9, and we should expect pretty high accuracy (>90%) despite training a new model from scratch. We’ll use this problem to implement PyTorch Lightning. I’ll walk through my super simple implementation, [which is on GitHub](https://github.com/sxg/PyTorch-Lightning-Quickstart). All of the code we write will be contained in just two files: one for setting up the data and one for setting up and training the model.
+Basic image classification using the MNIST handwritten digit dataset is a solved problem in 2023, but this makes it perfect for learning some new techniques like PyTorch Lightning, which promises to standardize, simplify, and accelerate the way we create models with PyTorch. The MNIST dataset consists of handwritten digits from 0 through 9, and we should expect pretty high accuracy (>90%) despite training a new model from scratch. We’ll use this problem to implement PyTorch Lightning. I’ll walk through my super simple implementation, and all of the code we write will be contained in just two files: one for setting up the data and one for setting up and training the model.
 
 # Setting Up the Environment
 
