@@ -145,11 +145,11 @@ class DigitModule(pl.LightningModule):
         self.valid_logged_images = False
         self.test_logged_images = False
 
-		def configure_optimizers(self):
-		    return optim.Adam(self.model.parameters(), lr=1e-3)
+    def configure_optimizers(self):
+        return optim.Adam(self.model.parameters(), lr=1e-3)
 
     def forward(self, x):
-				x_reshaped = x.view(-1, 784)
+        x_reshaped = x.view(-1, 784)
         return self.model(x_reshaped)
 ...
 ```
@@ -164,8 +164,8 @@ Next, we have our implementations of the training, validation, and test steps: a
 ...
 def training_step(self, batch, batch_idx):
     x, y = batch
-		output = self(x)
-		loss = self.loss_fn(output, y)
+    output = self(x)
+    loss = self.loss_fn(output, y)
 ...
 ```
 
@@ -195,18 +195,18 @@ Last, we’re also going to log the actual MNIST handwritten digit images to Ten
 ...
 # Log images to Tensorboard
 if not self.train_logged_images:
-		preds = torch.argmax(output, dim=1)
-		img_grid = make_grid(x)
-		self.logger.experiment.add_image(
-		    "train/inputs", img_grid, self.current_epoch
-		)
-		self.logger.experiment.add_text(
-		    "train/targets", str(y), self.current_epoch
-		)
-		self.logger.experiment.add_text(
-		    "train/preds", str(preds), self.current_epoch
-		)
-		self.train_logged_images = True
+    preds = torch.argmax(output, dim=1)
+    img_grid = make_grid(x)
+    self.logger.experiment.add_image(
+        "train/inputs", img_grid, self.current_epoch
+    )
+    self.logger.experiment.add_text(
+        "train/targets", str(y), self.current_epoch
+    )
+    self.logger.experiment.add_text(
+        "train/preds", str(preds), self.current_epoch
+    )
+    self.train_logged_images = True
 ...
 ```
 
