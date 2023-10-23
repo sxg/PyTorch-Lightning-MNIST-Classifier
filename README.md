@@ -23,7 +23,7 @@ Sample images of handwritten digits from the MNIST database. [Image courtesy of 
 
 ## `LightningDataModule`
 
-All logic related to setting up the data is in `[DigitDataModule.py](https://github.com/sxg/PyTorch-Lightning-Quickstart/blob/main/DigitDataModule.py)`, which contains our custom `LightningDataModule` subclass. Let’s start from the top!
+All logic related to setting up the data is in [DigitDataModule.py](https://github.com/sxg/PyTorch-Lightning-MNIST-Classifier/blob/main/DigitDataModule.py), which contains our custom `LightningDataModule` subclass. Let’s start from the top!
 
 ```python
 import lightning.pytorch as pl
@@ -116,7 +116,7 @@ Here, we simply create `torch.utils.data.DataLoader` instances for the training,
 
 ## `LightningModule`
 
-All logic related to setting up the model is in `[DigitModule.py](https://github.com/sxg/PyTorch-Lightning-Quickstart/blob/main/DigitModule.py)` which contains our custom `LightningModule` subclass. Let’s start with the model, loss function, and optimizer:
+All logic related to setting up the model is in [DigitModule.py](https://github.com/sxg/PyTorch-Lightning-MNIST-Classifier/blob/main/DigitModule.py) which contains our custom `LightningModule` subclass. Let’s start with the model, loss function, and optimizer:
 
 ```python
 from torch import optim, nn
